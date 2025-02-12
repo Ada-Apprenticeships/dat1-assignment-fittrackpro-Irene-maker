@@ -9,33 +9,34 @@ PRAGMA foreign_keys = ON;
 
 -- 1. List all active memberships
 SELECT 
-    m.member_id, 
-    m.first_name, 
-    m.last_name,
-    ms.membership_type, 
-    m.join_date
+    mem.member_id, 
+    mem.first_name, 
+    mem.last_name,
+    ms.type AS membership_type, 
+    mem.join_date
 FROM memberships ms
-JOIN members m ON ms.member_id = m.member_id
-WHERE ms.expiry_date >= CURRENT_DATE;
+JOIN members mem ON ms.member_id = mem.member_id
+WHERE ms.end_date >= CURRENT_DATE;
 
 
 -- 2. Calculate the average duration of gym visits for each membership type
+
 SELECT 
-    ms.membership_type, 
-    AVG(julianday(v.exit_time) - julianday(v.entry_time)) * 24 AS avg_visit_duration_minutes (dont forget to change to min)
-FROM visits v
-JOIN memberships ms ON v.member_id = ms.member_id
-WHERE v.exit_time IS NOT NULL
-GROUP BY ms.membership_type;
+    ms.type AS membership_type, 
+    AVG((strftime('%s', att.check_out_time) - strftime('%s', att.check_in_time)) / 60) AS avg_visit_duration_minutes 
+FROM attendance att
+JOIN memberships ms ON att.member_id = ms.member_id
+WHERE att.check_out_time IS NOT NULL 
+GROUP BY membership_type;
 
 
 -- 3. Identify members with expiring memberships this year
 SELECT 
-    m.member_id, 
-    m.first_name,
-    m.last_name, 
-    m.email,
+    mem.member_id, 
+    mem.first_name,
+    mem.last_name, 
+    mem.email,
     ms.end_date
 FROM memberships ms
-JOIN members m ON ms.member_id = m.member_id
-WHERE strftime('%Y', ms.expiry_date) = strftime('%Y', 'now');
+JOIN members mem ON ms.member_id = mem.member_id
+WHERE strftime('%Y', ms.end_date) = strftime('%Y', 'now');

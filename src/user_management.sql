@@ -22,15 +22,15 @@ SELECT COUNT(*) AS total_members
 FROM members;
 
 -- 4. Find member with the most class registrations
-SELECT mem.first_name, mem.last_name, COUNT(cat.member_id) AS registration_count
+SELECT mem.member_id,mem.first_name, mem.last_name, COUNT(cat.member_id) AS registration_count
 FROM class_attendance cat
-JOIN members mem ON ca.member_id = m.member_id
+JOIN members mem ON cat.member_id = mem.member_id
 GROUP BY cat.member_id
 ORDER BY registration_count DESC
 LIMIT 1;
 
 -- 5. Find member with the least class registrations
-SELECT mem.first_name, mem.last_name, COUNT(cat.member_id) AS registration_count
+SELECT mem.member_id,mem.first_name, mem.last_name, COUNT(cat.member_id) AS registration_count
 FROM class_attendance cat
 JOIN members mem ON cat.member_id = mem.member_id
 GROUP BY cat.member_id

@@ -18,7 +18,7 @@ SELECT
     SUM(amount) AS total_revenue
 FROM payments
 WHERE payment_type = 'Monthly membership fee' 
-AND payment_date >= DATETIME('now', '-1 year')
+AND strftime('%Y', payment_date) = strftime('%Y', DATE('now', '-1 year'))
 GROUP BY month
 ORDER BY month DESC;
 
@@ -27,3 +27,5 @@ ORDER BY month DESC;
 SELECT payment_id, amount, payment_date, payment_method
 FROM payments
 WHERE payment_type = 'Day pass';
+
+

@@ -129,7 +129,7 @@ CREATE TABLE payments (
     payment_id INTEGER PRIMARY KEY AUTOINCREMENT,
     member_id INTEGER NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
-    payment_date TEXT NOT NULL CHECK(payment_date GLOB '____-__-__ __:__:__'),
+    payment_date TEXT NOT NULL,
     payment_method TEXT NOT NULL CHECK (payment_method IN ('Credit Card', 'Bank Transfer', 'PayPal', 'Cash')),
     payment_type TEXT NOT NULL CHECK (payment_type IN ('Monthly membership fee', 'Day pass')),
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
